@@ -188,7 +188,7 @@ export async function calculateOrganizationSkillGaps(
     // Get all employees
     const employeesResult = await pool.query(
       `SELECT id, name, role, skills FROM employees 
-       WHERE organization_id = $1 AND status = 'active'`,
+       WHERE organization_id = $1 AND is_active = true`,
       [organizationId]
     );
 

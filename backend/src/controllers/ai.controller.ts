@@ -99,7 +99,6 @@ export class AIController {
       res.status(500).json({ error: 'Failed to get productivity scores' });
     }
   }
-}
 
   /**
    * Get skill gap analysis for an employee

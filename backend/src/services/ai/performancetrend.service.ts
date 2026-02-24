@@ -319,7 +319,7 @@ export async function predictOrganizationTrends(
     // Get all active employees
     const employeesResult = await pool.query(
       `SELECT id FROM employees 
-       WHERE organization_id = $1 AND status = 'active'`,
+       WHERE organization_id = $1 AND is_active = true`,
       [organizationId]
     );
 

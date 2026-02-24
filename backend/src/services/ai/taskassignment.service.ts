@@ -126,8 +126,7 @@ async function calculateAvailabilityScore(
     if (recentCompletions >= 1) return 60;
     return 40; // Less recent activity
   } catch (error) {
-    logger.error('Error ca
-lculating availability score:', error);
+    logger.error('Error calculating availability score:', error);
     return 50;
   }
 }
@@ -144,7 +143,7 @@ export async function recommendEmployeesForTask(
     let query = `
       SELECT id, name, email, role, department, skills
       FROM employees
-      WHERE organization_id = $1 AND status = 'active'
+      WHERE organization_id = $1 AND is_active = true
     `;
     const params: any[] = [organizationId];
 
