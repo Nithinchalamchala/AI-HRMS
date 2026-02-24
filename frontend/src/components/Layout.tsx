@@ -5,6 +5,8 @@ import {
   Users, 
   CheckSquare, 
   TrendingUp, 
+  Target,
+  LineChart,
   LogOut 
 } from 'lucide-react';
 
@@ -23,6 +25,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
     { path: '/employees', label: 'Employees', icon: Users },
     { path: '/tasks', label: 'Tasks', icon: CheckSquare },
     { path: '/productivity', label: 'Productivity', icon: TrendingUp },
+    { path: '/skill-gaps', label: 'Skill Gaps', icon: Target },
+    { path: '/performance-trends', label: 'Performance Trends', icon: LineChart },
   ];
 
   return (

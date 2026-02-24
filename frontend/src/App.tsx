@@ -10,6 +10,8 @@ import { DashboardPage } from './pages/DashboardPage';
 import { EmployeesPage } from './pages/EmployeesPage';
 import { TasksPage } from './pages/TasksPage';
 import { ProductivityPage } from './pages/ProductivityPage';
+import SkillGapsPage from './pages/SkillGapsPage';
+import PerformanceTrendsPage from './pages/PerformanceTrendsPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -64,6 +66,26 @@ function App() {
                 <ProtectedRoute>
                   <Layout>
                     <ProductivityPage />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/skill-gaps"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <SkillGapsPage />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/performance-trends"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PerformanceTrendsPage />
                   </Layout>
                 </ProtectedRoute>
               }

@@ -1,5 +1,19 @@
 import { Request, Response } from 'express';
 import { ProductivityService } from '../services/ai/productivity.service';
+import {
+  calculateEmployeeSkillGap,
+  calculateOrganizationSkillGaps,
+  getSkillGapRecommendations,
+} from '../services/ai/skillgap.service';
+import {
+  recommendEmployeesForTask,
+  validateEmployeeForTask,
+} from '../services/ai/taskassignment.service';
+import {
+  predictPerformanceTrend,
+  predictOrganizationTrends,
+  getEmployeesAtRisk,
+} from '../services/ai/performancetrend.service';
 import { logger } from '../utils/logger';
 
 export class AIController {
@@ -83,6 +97,166 @@ export class AIController {
     } catch (error) {
       logger.error('Get all scores error:', error);
       res.status(500).json({ error: 'Failed to get productivity scores' });
+    }
+  }
+}
+
+  /**
+   * Get skill gap analysis for an employee
+   */
+  static async getEmployeeSkillGap(req: Request, res: Response): Promise<void> {
+    try {
+      const organizationId = req.organizationId!;
+      const { employeeId } = req.params;
+
+      const skillGapData = await getSkillGapRecommendations(
+        parseInt(employeeId),
+        organizationId
+      );
+
+      if (!skillGapData.skillGap) {
+        res.status(404).json({ error: 'Employee not found' });
+        return;
+      }
+
+      res.status(200).json(skillGapData);
+    } catch (error) {
+      logger.error('Get skill gap error:', error);
+      res.status(500).json({ error: 'Failed to analyze skill gaps' });
+    }
+  }
+
+  /**
+   * Get organization-wide skill gaps
+   */
+  static async getOrganizationSkillGaps(req: Request, res: Response): Promise<void> {
+    try {
+      const organizationId = req.organizationId!;
+
+      const skillGaps = await calculateOrganizationSkillGaps(organizationId);
+
+      res.status(200).json({
+        totalGaps: skillGaps.length,
+        skillGaps,
+      });
+    } catch (error) {
+      logger.error('Get organization skill gaps error:', error);
+      res.status(500).json({ error: 'Failed to analyze organization skill gaps' });
+    }
+  }
+
+  /**
+   * Get task assignment recommendations
+   */
+  static async getTaskRecommendations(req: Request, res: Response): Promise<void> {
+    try {
+      const organizationId = req.organizationId!;
+      const { requiredSkills, complexity, department, estimatedHours } = req.body;
+
+      const recommendations = await recommendEmployeesForTask(
+        {
+          requiredSkills,
+          complexity,
+          department,
+          estimatedHours,
+        },
+        organizationId
+      );
+
+      res.status(200).json({
+        count: recommendations.length,
+        recommendations,
+      });
+    } catch (error) {
+      logger.error('Get task recommendations error:', error);
+      res.status(500).json({ error: 'Failed to generate recommendations' });
+    }
+  }
+
+  /**
+   * Validate employee for task assignment
+   */
+  static async validateTaskAssignment(req: Request, res: Response): Promise<void> {
+    try {
+      const organizationId = req.organizationId!;
+      const { employeeId } = req.params;
+      const { requiredSkills, complexity, department, estimatedHours } = req.body;
+
+      const validation = await validateEmployeeForTask(
+        parseInt(employeeId),
+        {
+          requiredSkills,
+          complexity,
+          department,
+          estimatedHours,
+        },
+        organizationId
+      );
+
+      res.status(200).json(validation);
+    } catch (error) {
+      logger.error('Validate task assignment error:', error);
+      res.status(500).json({ error: 'Failed to validate assignment' });
+    }
+  }
+
+  /**
+   * Get performance trend for an employee
+   */
+  static async getPerformanceTrend(req: Request, res: Response): Promise<void> {
+    try {
+      const organizationId = req.organizationId!;
+      const { employeeId } = req.params;
+
+      const trend = await predictPerformanceTrend(parseInt(employeeId), organizationId);
+
+      if (!trend) {
+        res.status(404).json({ error: 'Employee not found' });
+        return;
+      }
+
+      res.status(200).json(trend);
+    } catch (error) {
+      logger.error('Get performance trend error:', error);
+      res.status(500).json({ error: 'Failed to predict performance trend' });
+    }
+  }
+
+  /**
+   * Get performance trends for all employees
+   */
+  static async getOrganizationTrends(req: Request, res: Response): Promise<void> {
+    try {
+      const organizationId = req.organizationId!;
+
+      const trends = await predictOrganizationTrends(organizationId);
+
+      res.status(200).json({
+        count: trends.length,
+        trends,
+      });
+    } catch (error) {
+      logger.error('Get organization trends error:', error);
+      res.status(500).json({ error: 'Failed to predict organization trends' });
+    }
+  }
+
+  /**
+   * Get employees at risk (declining performance)
+   */
+  static async getAtRiskEmployees(req: Request, res: Response): Promise<void> {
+    try {
+      const organizationId = req.organizationId!;
+
+      const atRisk = await getEmployeesAtRisk(organizationId);
+
+      res.status(200).json({
+        count: atRisk.length,
+        employees: atRisk,
+      });
+    } catch (error) {
+      logger.error('Get at-risk employees error:', error);
+      res.status(500).json({ error: 'Failed to identify at-risk employees' });
     }
   }
 }
