@@ -11,7 +11,9 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage --runInBand",
     "migrate": "ts-node src/database/migrate.ts",
+    "migrate:prod": "node dist/database/migrate.js",
     "seed": "ts-node src/database/seed.ts",
+    "seed:prod": "node dist/database/seed.js",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\""
