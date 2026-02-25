@@ -300,9 +300,14 @@ export class TaskController {
 
       const task = result.rows[0];
 
-      // If task is completed, trigger productivity calculation
+      // If task is completed, trigger productivity calculation and update employee activity
       if (status === 'completed') {
-        // This will be implemented in AI productivity scoring
+        // Update employee's last activity timestamp
+        await pool.query(
+          'UPDATE employees SET last_activity_at = NOW() WHERE id = $1 AND organization_id = $2',
+          [assignedTo, organizationId]
+        );
+        
         logger.info(`Task completed: ${id}, triggering productivity calculation for employee: ${assignedTo}`);
       }
 

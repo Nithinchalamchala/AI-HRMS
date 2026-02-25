@@ -17,11 +17,12 @@ export class DashboardController {
       );
       const totalEmployees = parseInt(totalEmployeesResult.rows[0].count);
 
-      // Get active employees (activity within last 7 days)
+      // Get active employees (is_active = true)
+      // Note: last_activity_at is updated when tasks are completed
       const activeEmployeesResult = await pool.query(
         `SELECT COUNT(*) as count FROM employees 
          WHERE organization_id = $1 
-         AND last_activity_at > NOW() - INTERVAL '7 days'`,
+         AND is_active = true`,
         [organizationId]
       );
       const activeEmployees = parseInt(activeEmployeesResult.rows[0].count);

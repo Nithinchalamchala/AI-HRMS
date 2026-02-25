@@ -43,7 +43,7 @@ export default function SkillGapsPage() {
         api.get('/employees'),
       ]);
       setOrgSkillGaps(orgGapsRes.data.skillGaps || []);
-      setEmployees(employeesRes.data);
+      setEmployees(employeesRes.data.employees || []);
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to load skill gaps');
     } finally {

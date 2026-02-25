@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useQueryClient } from '@tantml:invoke>react-query';
 import api from '../lib/api';
 import toast from 'react-hot-toast';
 
@@ -23,6 +24,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     // Check if user is logged in on mount
@@ -55,6 +57,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('refreshToken', refreshToken);
       setUser(organization);
 
+      // Clear all cached queries to prevent data leakage between organizations
+      queryClient.clear();
+
       toast.success('Login successful!');
     } catch (error: any) {
       const message = error.response?.data?.error || 'Login failed';
@@ -78,6 +83,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     setUser(null);
+    
+    // Clear all cached queries to prevent data leakage
+    queryClient.clear();
+    
     toast.success('Logged out successfully');
   };
 

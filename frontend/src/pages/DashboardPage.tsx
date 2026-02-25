@@ -9,6 +9,8 @@ export function DashboardPage() {
       const response = await api.get('/dashboard/metrics');
       return response.data.metrics;
     },
+    refetchInterval: 30000, // Refetch every 30 seconds
+    refetchOnWindowFocus: true, // Refetch when window regains focus
   });
 
   if (isLoading) {
