@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../lib/api';
 import toast from 'react-hot-toast';
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import { Plus, Edit, Trash2, Power } from 'lucide-react';
 
 export function EmployeesPage() {
   const [showModal, setShowModal] = useState(false);
@@ -27,6 +27,26 @@ export function EmployeesPage() {
       toast.error('Failed to delete employee');
     },
   });
+
+  const toggleStatusMutation = useMutation({
+    mutationFn: ({ id, isActive }: { id: string; isActive: boolean }) =>
+      api.put(`/employees/${id}`, { isActive }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard-metrics'] });
+      toast.success('Employee status updated');
+    },
+    onError: () => {
+      toast.error('Failed to update employee status');
+    },
+  });
+
+  const handleToggleStatus = (employee: any) => {
+    const action = employee.isActive ? 'deactivate' : 'activate';
+    if (confirm(`Are you sure you want to ${action} ${employee.name}?`)) {
+      toggleStatusMutation.mutate({ id: employee.id, isActive: !employee.isActive });
+    }
+  };
 
   const handleDelete = (id: string) => {
     if (confirm('Are you sure you want to delete this employee?')) {
@@ -106,17 +126,30 @@ export function EmployeesPage() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <button
+                    onClick={() => handleToggleStatus(employee)}
+                    className={`mr-3 ${
+                      employee.isActive
+                        ? 'text-orange-600 hover:text-orange-900'
+                        : 'text-green-600 hover:text-green-900'
+                    }`}
+                    title={employee.isActive ? 'Deactivate' : 'Activate'}
+                  >
+                    <Power size={18} />
+                  </button>
+                  <button
                     onClick={() => {
                       setEditingEmployee(employee);
                       setShowModal(true);
                     }}
-                    className="text-blue-600 hover:text-blue-900 mr-4"
+                    className="text-blue-600 hover:text-blue-900 mr-3"
+                    title="Edit"
                   >
                     <Edit size={18} />
                   </button>
                   <button
                     onClick={() => handleDelete(employee.id)}
                     className="text-red-600 hover:text-red-900"
+                    title="Delete"
                   >
                     <Trash2 size={18} />
                   </button>
