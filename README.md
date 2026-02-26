@@ -16,6 +16,7 @@
 - [Tech Stack](#tech-stack)
 - [Quick Start](#quick-start)
 - [Testing](#testing)
+- [Deployment](#deployment)
 - [Documentation](#documentation)
 - [Project Structure](#project-structure)
 - [API Endpoints](#api-endpoints)
@@ -188,6 +189,27 @@ npm run dev
 open http://localhost:5173
 ```
 
+### 🎬 Demo Account (Pre-configured)
+
+For quick testing and video demonstrations, use the pre-configured demo account:
+
+```
+Email: demo@techcorp.com
+Password: Demo123!
+```
+
+**What's included:**
+- 10 employees across 4 departments
+- 15 tasks with various statuses
+- Productivity scores and AI data
+- All features ready to demonstrate
+
+**To reset demo data:**
+```bash
+cd backend
+npm run seed
+```
+
 ## 🧪 Testing
 
 ### Automated API Tests
@@ -218,6 +240,41 @@ open COMPLETE_TESTING_GUIDE.md
 - ✅ Unit Tests: 16/16 passing
 - ⏳ Frontend UI: Manual testing ready
 - ⏳ Integration: Ready for testing
+
+## 🚀 Deployment
+
+Ready to deploy your app to production? We've got you covered!
+
+### Quick Deploy (40 minutes)
+Deploy your AI-HRMS platform using:
+- **Frontend**: Vercel (free tier available)
+- **Backend**: Render (free tier available)
+- **Database**: Render PostgreSQL (free tier available)
+
+### Deployment Guides
+
+Choose the guide that fits your style:
+
+- **[DEPLOYMENT_QUICK_REFERENCE.md](./DEPLOYMENT_QUICK_REFERENCE.md)** - One-page quick reference
+- **[VERCEL_RENDER_DEPLOYMENT.md](./VERCEL_RENDER_DEPLOYMENT.md)** - Complete step-by-step guide
+- **[DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)** - Interactive checklist
+- **[DEPLOYMENT_SUMMARY.md](./DEPLOYMENT_SUMMARY.md)** - Overview and guide selection
+
+### Quick Start Deployment
+
+```bash
+# 1. Generate JWT secrets
+./generate-secrets.sh
+
+# 2. Follow the deployment guide
+open DEPLOYMENT_QUICK_REFERENCE.md
+
+# 3. Deploy backend to Render (15 min)
+# 4. Deploy frontend to Vercel (10 min)
+# 5. Test your live app!
+```
+
+**Cost**: Free tier available ($0/month) or production tier ($34/month)
 
 ## 📚 Documentation
 
